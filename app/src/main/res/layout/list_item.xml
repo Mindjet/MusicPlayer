@@ -5,12 +5,14 @@
 
     <TextView
         android:id="@+id/title"
-        android:layout_toRightOf="@+id/album"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="5dp"
-        android:maxLength="20"
+        android:singleLine="true"
+        android:layout_toRightOf="@+id/album"
+        android:ellipsize="end"
+        android:marqueeRepeatLimit="marquee_forever"
         android:text="Large Text"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#000000"
@@ -46,6 +48,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignTop="@+id/title"
+        android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:src="@mipmap/ic_launcher"/>
 </RelativeLayout>

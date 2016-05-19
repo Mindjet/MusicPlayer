@@ -28,15 +28,21 @@ public class PlayerService extends Service{
         if (mediaPlayer.isPlaying())  stop();
 
         musicPath = intent.getStringExtra("url");
-        Toast.makeText(this, musicPath, Toast.LENGTH_SHORT).show();
         int msg = intent.getIntExtra("MSG", 0);
 
-        if (msg==AppConstant.PlayerMsg.PLAY_MSG)
-            play(0);
-        else if (msg==AppConstant.PlayerMsg.PAUSE_MSG)
-            pause();
-        else if (msg==AppConstant.PlayerMsg.STOP_MSG)
-            stop();
+        switch (msg){
+
+            case AppConstant.PlayerMsg.PLAY_MSG:
+                play(0);
+                break;
+            case AppConstant.PlayerMsg.PAUSE_MSG:
+                pause();
+                break;
+            case AppConstant.PlayerMsg.STOP_MSG:
+                stop();
+                break;
+
+        }
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -58,7 +64,7 @@ public class PlayerService extends Service{
     //暂停
     private void pause(){
 
-        if (mediaPlayer.isPlaying())
+//        if (mediaPlayer.isPlaying())
             mediaPlayer.pause();
 
     }
@@ -101,11 +107,10 @@ public class PlayerService extends Service{
 
     @Override
     public void onDestroy() {
-        if (mediaPlayer!=null){
 
             mediaPlayer.stop();
             mediaPlayer.release();
 
-        }
+        
     }
 }
