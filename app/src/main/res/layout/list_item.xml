@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
+                android:background="#25252f"
                 android:layout_height="match_parent">
 
     <TextView
@@ -8,14 +9,14 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:singleLine="true"
         android:layout_toRightOf="@+id/album"
         android:ellipsize="end"
         android:marqueeRepeatLimit="marquee_forever"
         android:text="Large Text"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#000000"
+        android:textColor="#fff"
         android:textStyle="bold"/>
 
     <TextView
@@ -28,7 +29,7 @@
         android:layout_marginEnd="10dp"
         android:layout_marginRight="0dp"
         android:text="Medium Text"
-        android:textColor="#000000"/>
+        android:textColor="#fff"/>
 
     <TextView
         android:id="@+id/artist"
@@ -38,7 +39,7 @@
         android:layout_alignLeft="@+id/title"
         android:layout_alignStart="@+id/title"
         android:text="Medium Text"
-        android:textColor="#000000"
+        android:textColor="#fff"
         android:textStyle="italic"/>
 
     <ImageView
@@ -48,7 +49,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignTop="@+id/title"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginLeft="8dp"
         android:src="@mipmap/ic_launcher"/>
 </RelativeLayout>

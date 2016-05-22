@@ -3,82 +3,104 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="#25252f"
                 tools:context="com.mindjet.com.musicplayer.PlayerActivity">
 
+
     <LinearLayout
-        android:id="@+id/buttonGroup"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#ccc"
-        android:orientation="horizontal"
-        android:padding="5dp">
+        android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/previous"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight=".2"
-            android:text="上"/>
+        <include
+            android:id="@+id/actionbar"
+            layout="@layout/myactionbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-        <Button
-            android:id="@+id/repeat"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/buttonGroup"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight=".2"
-            android:text="重复"/>
+            android:background="#25252f"
+            android:orientation="horizontal"
+            android:padding="5dp">
 
-        <Button
-            android:id="@+id/play"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight=".2"
-            android:text="播放"/>
+            <Button
+                android:id="@+id/previous"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight=".2"
+                android:text="上"/>
 
-        <Button
-            android:id="@+id/shuffle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight=".2"
-            android:text="随机"/>
+            <Button
+                android:id="@+id/repeat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight=".2"
+                android:text="重复"/>
 
-        <Button
-            android:id="@+id/next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight=".2"
-            android:text="下"/>
+            <Button
+                android:id="@+id/play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight=".2"
+                android:text="播放"/>
+
+            <Button
+                android:id="@+id/shuffle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight=".2"
+                android:text="随机"/>
+
+            <Button
+                android:id="@+id/next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight=".2"
+                android:text="下"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ListView
+                android:id="@+id/listView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="65dp"
+                android:divider="#fff"
+                android:dividerHeight="1dp"
+                android:focusable="true"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
-
-    <ListView
-        android:id="@+id/listView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
-        android:focusable="true"/>
-
-
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:background="#ccc">
+        android:background="#333"
+        >
 
         <ImageView
             android:id="@+id/album"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+            android:src="@mipmap/ic_launcher"
+            android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="false"
-            android:layout_alignParentTop="false"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="10dp"
-            android:src="@mipmap/ic_launcher"/>
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="14dp"/>
 
         <SeekBar
             android:id="@+id/seekBar"
@@ -93,26 +115,31 @@
 
         <TextView
             android:id="@+id/song_name"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/album"
             android:layout_alignLeft="@+id/seekBar"
             android:layout_alignStart="@+id/seekBar"
             android:layout_marginLeft="15dp"
+            android:ellipsize="end"
+            android:singleLine="true"
             android:text="Small Text"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#fff"/>
 
         <TextView
+            android:id="@+id/current_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
-            android:id="@+id/current_progress"
             android:layout_alignBottom="@+id/album"
-            android:layout_alignRight="@+id/seekBar"
             android:layout_alignEnd="@+id/seekBar"
-            android:layout_marginRight="10dp"/>
+            android:layout_alignRight="@+id/seekBar"
+            android:layout_marginRight="10dp"
+            android:text="Small Text"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#fff"/>
 
     </RelativeLayout>
+
 
 </RelativeLayout>
