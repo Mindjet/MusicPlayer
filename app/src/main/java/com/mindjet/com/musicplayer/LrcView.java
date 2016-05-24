@@ -27,14 +27,14 @@ public class LrcView extends android.widget.TextView {
     private Paint currentPaint;	//当前画笔对象
     private Paint notCurrentPaint;	//非当前画笔对象
     private float textHeight = 25;	//文本高度
-    private float textSize = 18;		//文本大小
+    private float textSize = 20;		//文本大小
     private int index = 0;		//list集合下标
 
 
-    private List<LrcContent> mLrcList = new ArrayList<LrcContent>();
+    private static List<LrcContent> mLrcList = new ArrayList<LrcContent>();
 
     public void setmLrcList(List<LrcContent> mLrcList) {
-        this.mLrcList = mLrcList;
+        LrcView.mLrcList = mLrcList;
     }
 
     public LrcView(Context context) {
@@ -64,13 +64,20 @@ public class LrcView extends android.widget.TextView {
         notCurrentPaint = new Paint();
         notCurrentPaint.setAntiAlias(true);
         notCurrentPaint.setTextAlign(Paint.Align.CENTER);
+
+        width=getWidth();
+        height=getHeight();
     }
 
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
 
     /**
      * 绘画歌词
      */
-
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -79,26 +86,36 @@ public class LrcView extends android.widget.TextView {
             return;
         }
 
-        currentPaint.setColor(Color.argb(210, 251, 248, 29));
-        notCurrentPaint.setColor(Color.argb(140, 255, 255, 255));
+        currentPaint.setColor(Color.BLACK);
+        notCurrentPaint.setColor(Color.GRAY);
 
-        currentPaint.setTextSize(24);
+        currentPaint.setTextSize(25);
         currentPaint.setTypeface(Typeface.SERIF);
 
         notCurrentPaint.setTextSize(textSize);
         notCurrentPaint.setTypeface(Typeface.DEFAULT);
 
-        System.out.println("in onDraw");
-
-        // mlist消失了？！！！
-        System.out.println(mLrcList);
-
         try {
+
             setText("");
-            setText(mLrcList.get(index).getLrcStr());
+            canvas.drawText(mLrcList.get(index).getLrcStr(),width/2,height/2,currentPaint);
+            float tempY = height / 2;
+            //画出本句之前的句子
+            for(int i = index - 1; i >= 0; i--) {
+                //向上推移
+                tempY = tempY - textHeight-10;
+                canvas.drawText(mLrcList.get(i).getLrcStr(), width / 2, tempY, notCurrentPaint);
+            }
+            tempY = height /2;
+            //画出本句之后的句子
+            for(int i = index + 1; i < mLrcList.size(); i++) {
+                //往下推移
+                tempY = tempY + textHeight+10;
+                canvas.drawText(mLrcList.get(i).getLrcStr(), width / 2, tempY, notCurrentPaint);
+            }
+
 //            canvas.drawText(mLrcList.get(index).getLrcStr(), width / 2, height / 2, currentPaint);
 //
-//            System.out.println(mLrcList.get(index).getLrcStr());
 //
 //            float tempY = height / 2;
 //            //画出本句之前的句子
@@ -117,7 +134,6 @@ public class LrcView extends android.widget.TextView {
 //            invalidate();
 
         } catch (Exception e) {
-            System.out.println(e);
             setText("...木有歌词文件，赶紧去下载...");
         }
     }

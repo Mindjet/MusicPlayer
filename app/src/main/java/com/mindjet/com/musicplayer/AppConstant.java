@@ -1,8 +1,14 @@
 package com.mindjet.com.musicplayer;
 
+
 /**
- * Created by zyd on 2016/5/19.
+ * @author mindjet
+ * @date 2016.5.19
+ * 存放常量
+ * MSG = activity对service发送intent携带的消息
+ * intentFilter的filter
  */
+
 public class AppConstant {
 
     public class PlayerMsg{
@@ -14,7 +20,13 @@ public class AppConstant {
         public static final int PREVIOUS_MSG = 5;	//上一首
         public static final int NEXT_MSG = 6;		//下一首
         public static final int PROGRESS_CHANGE = 7;//进度改变
-        public static final int PLAYING_MSG = 8;	//正在播放
+
+    }
+
+    public class ActionMsg{
+
+        public static final String MUSIC_CURRENT = "com.mindjet.action.MUSIC_CURRENT";  //发送当前播放时间，更新进度条
+        public static final String UPDATE_TITLE = "com.mindjet.action.UPDATE_TITLE";    //更新播放标题
 
     }
 }

@@ -38,7 +38,8 @@ public class MediaUtil {
             mp3Info.url = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
             mp3Info.isMusic = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC));
 
-            mp3InfoList.add(mp3Info);
+            if (mp3Info.isMusic==1&&mp3Info.duration>5000)
+                mp3InfoList.add(mp3Info);
 
         }
 
@@ -52,7 +53,19 @@ public class MediaUtil {
         long second = duration / 1000;
         long minute = second / 60;
         second = second % 60;
-        return minute+":"+second;
+
+        String min = String.valueOf(minute);
+        String sec = String.valueOf(second);
+
+        if (minute<10) {
+            min = "0" + String.valueOf(minute);
+        }
+
+        if (second<10){
+            sec = "0" + String.valueOf(second);
+        }
+
+        return min+":"+sec;
 
     }
 
