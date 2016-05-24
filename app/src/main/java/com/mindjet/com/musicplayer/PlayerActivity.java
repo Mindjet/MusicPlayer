@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
@@ -23,7 +24,9 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +68,9 @@ public class PlayerActivity extends AppCompatActivity {
         filter.addAction(AppConstant.ActionMsg.UPDATE_TITLE);
         registerReceiver(receiver, filter);
 
+
     }
+
 
     //初始化控件
     @Override

@@ -1,5 +1,7 @@
 package com.mindjet.com.musicplayer;
 
+import android.os.Environment;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,6 +17,8 @@ import java.util.List;
  */
 public class LrcProcess {
 
+    private File rightFile = null;
+
     private List<LrcContent> lrcContentList = new ArrayList<LrcContent>();
 
     /**
@@ -23,57 +27,83 @@ public class LrcProcess {
      * 歌词样式：
      * [00:02.32]雅俗共赏
      * [00:03.43]许嵩
-     * [00:05.22]歌词制作  mindjet
+     * [00:05.22]歌词制作  Mindjet
      *
      * @param lrcPath
      */
     public String readLRC(String lrcPath) {
 
         StringBuilder stringBuilder = new StringBuilder();
-        lrcPath = lrcPath.replace("Music","Musiclrc");
-        lrcPath = lrcPath.replace(".mp3",".lrc");
+        lrcPath = lrcPath.replace("Music", "Musiclrc");
+        lrcPath = lrcPath.replace(".mp3", ".lrc");
 
-        File file = new File(lrcPath);
+        File root = Environment.getExternalStorageDirectory();
+        getFile(root);
 
-        try {
+        if (rightFile!=null) {
 
-            FileInputStream in = new FileInputStream(file);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in,"utf-8"));
-            String str = "";
+            try {
 
-            while ((str = reader.readLine()) != null) {
+                FileInputStream in = new FileInputStream(rightFile);
+                System.out.println(rightFile);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in, "utf-8"));
+                String str = "";
 
-                str = str.replace("[", "");
-                str = str.replace("]", "@");
+                while ((str = reader.readLine()) != null) {
 
-                if (str.contains("x-trans")) continue;
+                    str = str.replace("[", "");
+                    str = str.replace("]", "@");
 
-                String[] splitedData = str.split("@");
+                    if (str.contains("x-trans")) continue;
 
-                if (splitedData.length > 1) {
+                    String[] splitedData = str.split("@");
 
-                    LrcContent content = new LrcContent();
+                    if (splitedData.length > 1) {
 
-                    content.setLrcStr(splitedData[1]);
-                    content.setLrcTime(str2time(splitedData[0]));
-                    lrcContentList.add(content);
+                        LrcContent content = new LrcContent();
+
+                        content.setLrcStr(splitedData[1]);
+                        content.setLrcTime(str2time(splitedData[0]));
+                        lrcContentList.add(content);
+
+                    }
 
                 }
 
+                reader.close();
+                in.close();
+
+                System.out.println(lrcContentList);
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                stringBuilder.append("没有歌词文件");
+            } catch (IOException e) {
+                e.printStackTrace();
+                stringBuilder.append("读取错误");
             }
+        }else {
 
-            reader.close();
-            in.close();
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            stringBuilder.append("没有歌词文件");
-        } catch (IOException e) {
-            e.printStackTrace();
-            stringBuilder.append("读取错误");
+            return stringBuilder.toString();
         }
 
-        return stringBuilder.toString();
+        return null;
+
+    }
+
+    private void getFile(File root) {
+
+        File []files = root.listFiles();
+        for (File file : files){
+
+            if (file.isDirectory()){
+                getFile(file);
+            }else if (file.getPath().contains(PlayerState.mp3InfoList.get(PlayerState.music_position).title)){
+                if (file.getPath().substring(file.getPath().lastIndexOf(".")+1).equals("lrc"))
+                    rightFile =  file;
+            }
+
+        }
 
     }
 
