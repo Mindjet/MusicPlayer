@@ -90,6 +90,7 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
                 intent.setAction("com.mindjet.media.MUSIC_SERVICE");
                 intent.putExtra("progress", this.progress);
                 intent.putExtra("MSG", AppConstant.PlayerMsg.PROGRESS_CHANGE);
+                intent.setPackage("com.mindjet.com.musicplayer");
                 startService(intent);
             }
         });
@@ -160,6 +161,7 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
                     intent.putExtra("url",PlayerState.mp3InfoList.get(PlayerState.music_position).url);
                     intent.setAction("com.mindjet.media.MUSIC_SERVICE");
                     intent.putExtra("MSG",AppConstant.PlayerMsg.PLAY_MSG);
+                    intent.setPackage("com.mindjet.com.musicplayer");
                     startService(intent);
 
                 }else if (PlayerState.isPlaying) {
@@ -170,6 +172,7 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
                     Intent intent = new Intent();
                     intent.setAction("com.mindjet.media.MUSIC_SERVICE");
                     intent.putExtra("MSG", AppConstant.PlayerMsg.PAUSE_MSG);
+                    intent.setPackage("com.mindjet.com.musicplayer");
                     startService(intent);
 
                 } else if (PlayerState.isPause) {
@@ -180,6 +183,7 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
                     Intent intent = new Intent();
                     intent.setAction("com.mindjet.media.MUSIC_SERVICE");
                     intent.putExtra("MSG",AppConstant.PlayerMsg.CONTINUE_MSG);
+                    intent.setPackage("com.mindjet.com.musicplayer");
                     startService(intent);
 
                 }
@@ -197,6 +201,7 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
                     intent.setAction("com.mindjet.media.MUSIC_SERVICE");
                     intent.putExtra("url",PlayerState.mp3InfoList.get(PlayerState.music_position).url);
                     intent.putExtra("MSG",AppConstant.PlayerMsg.NEXT_MSG);
+                    intent.setPackage("com.mindjet.com.musicplayer");
                     startService(intent);
 
                 }else {
@@ -218,6 +223,7 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
                     intent.setAction("com.mindjet.media.MUSIC_SERVICE");
                     intent.putExtra("url",PlayerState.mp3InfoList.get(PlayerState.music_position).url);
                     intent.putExtra("MSG",AppConstant.PlayerMsg.PREVIOUS_MSG);
+                    intent.setPackage("com.mindjet.com.musicplayer");
                     startService(intent);
 
                 }else {

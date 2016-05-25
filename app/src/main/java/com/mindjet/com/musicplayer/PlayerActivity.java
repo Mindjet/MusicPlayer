@@ -185,6 +185,7 @@ public class PlayerActivity extends AppCompatActivity {
                 intent.putExtra("url", mp3Info.url);
                 intent.putExtra("MSG", AppConstant.PlayerMsg.PLAY_MSG);
                 intent.setAction("com.mindjet.media.MUSIC_SERVICE");
+                intent.setPackage("com.mindjet.com.musicplayer");
                 startService(intent);
 
                 PlayerState.music_position = position;
@@ -270,6 +271,7 @@ public class PlayerActivity extends AppCompatActivity {
         intent.putExtra("title", mp3Info.title);
         intent.putExtra("artist", mp3Info.artist);
         intent.putExtra("duration", MediaUtil.formatTime(mp3Info.duration));
+        intent.setPackage("com.mindjet.com.musicplayer");
 
         //第一次启动，需要将歌词索引传进去给 lrcView
         if (LyricActivity.lrcView == null) {
@@ -295,6 +297,7 @@ public class PlayerActivity extends AppCompatActivity {
             intent.setAction("com.mindjet.media.MUSIC_SERVICE");
             intent.putExtra("url", PlayerState.mp3InfoList.get(PlayerState.music_position).url);
             intent.putExtra("MSG", AppConstant.PlayerMsg.PLAY_MSG);
+            intent.setPackage("com.mindjet.com.musicplayer");
             startService(intent);
 
         } else if (PlayerState.isPlaying) {
@@ -305,6 +308,7 @@ public class PlayerActivity extends AppCompatActivity {
             Intent intent = new Intent();
             intent.setAction("com.mindjet.media.MUSIC_SERVICE");
             intent.putExtra("MSG", AppConstant.PlayerMsg.PAUSE_MSG);
+            intent.setPackage("com.mindjet.com.musicplayer");
             startService(intent);
 
         } else if (PlayerState.isPause) {
@@ -315,6 +319,7 @@ public class PlayerActivity extends AppCompatActivity {
             Intent intent = new Intent();
             intent.setAction("com.mindjet.media.MUSIC_SERVICE");
             intent.putExtra("MSG", AppConstant.PlayerMsg.CONTINUE_MSG);
+            intent.setPackage("com.mindjet.com.musicplayer");
             startService(intent);
 
         }
@@ -339,6 +344,7 @@ public class PlayerActivity extends AppCompatActivity {
             intent.putExtra("url", mp3Info.url);
             intent.putExtra("MSG", AppConstant.PlayerMsg.NEXT_MSG);
             intent.setAction("com.mindjet.media.MUSIC_SERVICE");
+            intent.setPackage("com.mindjet.com.musicplayer");
             startService(intent);
 
         } else {
@@ -367,6 +373,7 @@ public class PlayerActivity extends AppCompatActivity {
             intent.putExtra("url", mp3Info.url);
             intent.putExtra("MSG", AppConstant.PlayerMsg.PREVIOUS_MSG);
             intent.setAction("com.mindjet.media.MUSIC_SERVICE");
+            intent.setPackage("com.mindjet.com.musicplayer");
             startService(intent);
 
         } else {
@@ -451,6 +458,7 @@ public class PlayerActivity extends AppCompatActivity {
             intent.setAction("com.mindjet.media.MUSIC_SERVICE");
             intent.putExtra("MSG", AppConstant.PlayerMsg.PROGRESS_CHANGE);
             intent.putExtra("progress", this.progress);
+            intent.setPackage("com.mindjet.com.musicplayer");
             startService(intent);
 
         }
