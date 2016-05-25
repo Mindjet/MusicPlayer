@@ -26,7 +26,6 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +67,15 @@ public class PlayerActivity extends AppCompatActivity {
         filter.addAction(AppConstant.ActionMsg.UPDATE_TITLE);
         registerReceiver(receiver, filter);
 
+        //开启子线程去遍历整个内存文件夹，找出后缀为 .lrc 的文件
+        new Thread(){
+            @Override
+            public void run() {
+
+                PlayerSource.getLrcFile(Environment.getExternalStorageDirectory());
+
+            }
+        }.start();
 
     }
 
@@ -79,9 +87,9 @@ public class PlayerActivity extends AppCompatActivity {
 
         //TODO 判断播放状态来控制 UI
         //TODO 后期将设计为图形按钮，通过 广播机制 来更新
-        if (PlayerState.isPlaying) btn_play.setText("暂停");
-        if (PlayerState.isPause) btn_play.setText("继续");
-        if (PlayerState.isFirstTime) btn_play.setText("播放");
+        if (PlayerSource.isPlaying) btn_play.setText("暂停");
+        if (PlayerSource.isPause) btn_play.setText("继续");
+        if (PlayerSource.isFirstTime) btn_play.setText("播放");
     }
 
     //销毁 service
@@ -134,10 +142,10 @@ public class PlayerActivity extends AppCompatActivity {
 
         musicList = (ListView) findViewById(R.id.listView);
         //从数据库拉取出 mp3 数据并返回一个 List<Mp3Info> 对象作为适配器的资源
-        PlayerState.mp3InfoList = MediaUtil.getMp3InfoList(getApplicationContext());
+        PlayerSource.mp3InfoList = MediaUtil.getMp3InfoList(getApplicationContext());
 
         //为适配器绑定资源并且将改适配器设置给 listView
-        setListAdapter(PlayerState.mp3InfoList);
+        setListAdapter(PlayerSource.mp3InfoList);
 
         //为 listView 每个项目添加点击事件
         musicList.setOnItemClickListener(new MusicListItemClickListener());
@@ -178,9 +186,9 @@ public class PlayerActivity extends AppCompatActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            if (PlayerState.mp3InfoList != null) {
+            if (PlayerSource.mp3InfoList != null) {
 
-                Mp3Info mp3Info = PlayerState.mp3InfoList.get(position);
+                Mp3Info mp3Info = PlayerSource.mp3InfoList.get(position);
                 Intent intent = new Intent();
                 intent.putExtra("url", mp3Info.url);
                 intent.putExtra("MSG", AppConstant.PlayerMsg.PLAY_MSG);
@@ -188,10 +196,10 @@ public class PlayerActivity extends AppCompatActivity {
                 intent.setPackage("com.mindjet.com.musicplayer");
                 startService(intent);
 
-                PlayerState.music_position = position;
-                PlayerState.isFirstTime = false;
-                PlayerState.isPlaying = true;
-                PlayerState.isPause = false;
+                PlayerSource.music_position = position;
+                PlayerSource.isFirstTime = false;
+                PlayerSource.isPlaying = true;
+                PlayerSource.isPause = false;
                 btn_play.setText("暂停");
 
             }
@@ -229,12 +237,12 @@ public class PlayerActivity extends AppCompatActivity {
 
                 case R.id.repeat:
                     //TODO 后期与 lyricactivity相同方法包装
-                    if (PlayerState.mode != 1) {
-                        PlayerState.mode = 1;
+                    if (PlayerSource.mode != 1) {
+                        PlayerSource.mode = 1;
                         btn_repeat.setText("顺序");
                         Toast.makeText(PlayerActivity.this, "当前播放模式：单曲循环", Toast.LENGTH_SHORT).show();
-                    } else if (PlayerState.mode == 1) {
-                        PlayerState.mode = 2;
+                    } else if (PlayerSource.mode == 1) {
+                        PlayerSource.mode = 2;
                         btn_repeat.setText("单曲");
                         Toast.makeText(PlayerActivity.this, "当前播放模式：顺序播放", Toast.LENGTH_SHORT).show();
                     }
@@ -244,12 +252,12 @@ public class PlayerActivity extends AppCompatActivity {
                 case R.id.shuffle:
 
                     //TODO 后期与 lyricactivity相同方法包装
-                    if (PlayerState.mode != 3) {
-                        PlayerState.mode = 3;
+                    if (PlayerSource.mode != 3) {
+                        PlayerSource.mode = 3;
                         btn_shuffle.setText("顺序");
                         Toast.makeText(PlayerActivity.this, "当前播放模式：随机播放", Toast.LENGTH_SHORT).show();
-                    } else if (PlayerState.mode == 3) {
-                        PlayerState.mode = 2;
+                    } else if (PlayerSource.mode == 3) {
+                        PlayerSource.mode = 2;
                         btn_shuffle.setText("随机");
                         Toast.makeText(PlayerActivity.this, "当前播放模式：顺序播放", Toast.LENGTH_SHORT).show();
                     }
@@ -265,7 +273,7 @@ public class PlayerActivity extends AppCompatActivity {
     //跳转到 LyricActivity
     private void change() {
 
-        Mp3Info mp3Info = PlayerState.mp3InfoList.get(PlayerState.music_position);
+        Mp3Info mp3Info = PlayerSource.mp3InfoList.get(PlayerSource.music_position);
         Intent intent = new Intent(PlayerActivity.this, LyricActivity.class);
 
         intent.putExtra("title", mp3Info.title);
@@ -285,25 +293,25 @@ public class PlayerActivity extends AppCompatActivity {
     //处理 播放/暂停/继续 按钮
     private void play_pause_continue() {
 
-        if (PlayerState.isFirstTime) {
+        if (PlayerSource.isFirstTime) {
 
-            PlayerState.isPlaying = true;
-            PlayerState.isPause = false;
-            PlayerState.isFirstTime = false;
+            PlayerSource.isPlaying = true;
+            PlayerSource.isPause = false;
+            PlayerSource.isFirstTime = false;
 
             btn_play.setText("暂停");
 
             Intent intent = new Intent();
             intent.setAction("com.mindjet.media.MUSIC_SERVICE");
-            intent.putExtra("url", PlayerState.mp3InfoList.get(PlayerState.music_position).url);
+            intent.putExtra("url", PlayerSource.mp3InfoList.get(PlayerSource.music_position).url);
             intent.putExtra("MSG", AppConstant.PlayerMsg.PLAY_MSG);
             intent.setPackage("com.mindjet.com.musicplayer");
             startService(intent);
 
-        } else if (PlayerState.isPlaying) {
+        } else if (PlayerSource.isPlaying) {
 
-            PlayerState.isPlaying = false;
-            PlayerState.isPause = true;
+            PlayerSource.isPlaying = false;
+            PlayerSource.isPause = true;
             btn_play.setText("播放");
             Intent intent = new Intent();
             intent.setAction("com.mindjet.media.MUSIC_SERVICE");
@@ -311,10 +319,10 @@ public class PlayerActivity extends AppCompatActivity {
             intent.setPackage("com.mindjet.com.musicplayer");
             startService(intent);
 
-        } else if (PlayerState.isPause) {
+        } else if (PlayerSource.isPause) {
 
-            PlayerState.isPlaying = true;
-            PlayerState.isPause = false;
+            PlayerSource.isPlaying = true;
+            PlayerSource.isPause = false;
             btn_play.setText("暂停");
             Intent intent = new Intent();
             intent.setAction("com.mindjet.media.MUSIC_SERVICE");
@@ -329,17 +337,17 @@ public class PlayerActivity extends AppCompatActivity {
     //处理 下一首 按钮的点击事件
     private void next() {
 
-        if (PlayerState.music_position + 1 <= PlayerState.mp3InfoList.size() - 1) {
+        if (PlayerSource.music_position + 1 <= PlayerSource.mp3InfoList.size() - 1) {
 
             //初始化各参数与界面
-            PlayerState.music_position += 1;
-            PlayerState.isFirstTime = false;
-            PlayerState.isPlaying = true;
-            PlayerState.isPause = false;
+            PlayerSource.music_position += 1;
+            PlayerSource.isFirstTime = false;
+            PlayerSource.isPlaying = true;
+            PlayerSource.isPause = false;
             btn_play.setText("暂停");
 
             //开启服务
-            Mp3Info mp3Info = PlayerState.mp3InfoList.get(PlayerState.music_position);
+            Mp3Info mp3Info = PlayerSource.mp3InfoList.get(PlayerSource.music_position);
             Intent intent = new Intent();
             intent.putExtra("url", mp3Info.url);
             intent.putExtra("MSG", AppConstant.PlayerMsg.NEXT_MSG);
@@ -358,17 +366,17 @@ public class PlayerActivity extends AppCompatActivity {
     //处理 上一首 按钮的点击事件
     private void previous() {
 
-        if (PlayerState.music_position - 1 >= 0) {
+        if (PlayerSource.music_position - 1 >= 0) {
 
             //初始化各参数与界面
-            PlayerState.music_position -= 1;
-            PlayerState.isFirstTime = false;
-            PlayerState.isPlaying = true;
-            PlayerState.isPause = false;
+            PlayerSource.music_position -= 1;
+            PlayerSource.isFirstTime = false;
+            PlayerSource.isPlaying = true;
+            PlayerSource.isPause = false;
             btn_play.setText("暂停");
 
             //开启服务
-            Mp3Info mp3Info = PlayerState.mp3InfoList.get(PlayerState.music_position);
+            Mp3Info mp3Info = PlayerSource.mp3InfoList.get(PlayerSource.music_position);
             Intent intent = new Intent();
             intent.putExtra("url", mp3Info.url);
             intent.putExtra("MSG", AppConstant.PlayerMsg.PREVIOUS_MSG);

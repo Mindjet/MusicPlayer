@@ -4,23 +4,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -136,9 +127,9 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
 
         //判断此时播放状态，确定 播放键 的状态 -- “播放”？“暂停”？“继续”？
         //TODO 后期将设计为图形按钮，通过 广播机制 来更新
-        if (PlayerState.isFirstTime) play.setText("播放");
-        if (PlayerState.isPlaying) play.setText("暂停");
-        if (PlayerState.isPause) play.setText("继续");
+        if (PlayerSource.isFirstTime) play.setText("播放");
+        if (PlayerSource.isPlaying) play.setText("暂停");
+        if (PlayerSource.isPause) play.setText("继续");
 
     }
 
@@ -151,23 +142,23 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
 
             case R.id.lrc_play:
 
-                if (PlayerState.isFirstTime) {
+                if (PlayerSource.isFirstTime) {
 
-                    PlayerState.isFirstTime = false;
-                    PlayerState.isPlaying = true;
-                    PlayerState.isPause = false;
+                    PlayerSource.isFirstTime = false;
+                    PlayerSource.isPlaying = true;
+                    PlayerSource.isPause = false;
                     play.setText("暂停");
                     Intent intent = new Intent();
-                    intent.putExtra("url",PlayerState.mp3InfoList.get(PlayerState.music_position).url);
+                    intent.putExtra("url", PlayerSource.mp3InfoList.get(PlayerSource.music_position).url);
                     intent.setAction("com.mindjet.media.MUSIC_SERVICE");
                     intent.putExtra("MSG",AppConstant.PlayerMsg.PLAY_MSG);
                     intent.setPackage("com.mindjet.com.musicplayer");
                     startService(intent);
 
-                }else if (PlayerState.isPlaying) {
+                }else if (PlayerSource.isPlaying) {
 
-                    PlayerState.isPlaying = false;
-                    PlayerState.isPause = true;
+                    PlayerSource.isPlaying = false;
+                    PlayerSource.isPause = true;
                     play.setText("继续");
                     Intent intent = new Intent();
                     intent.setAction("com.mindjet.media.MUSIC_SERVICE");
@@ -175,10 +166,10 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
                     intent.setPackage("com.mindjet.com.musicplayer");
                     startService(intent);
 
-                } else if (PlayerState.isPause) {
+                } else if (PlayerSource.isPause) {
 
-                    PlayerState.isPause = false;
-                    PlayerState.isPlaying = true;
+                    PlayerSource.isPause = false;
+                    PlayerSource.isPlaying = true;
                     play.setText("暂停");
                     Intent intent = new Intent();
                     intent.setAction("com.mindjet.media.MUSIC_SERVICE");
@@ -190,16 +181,16 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.lrc_next:
-                if (PlayerState.music_position<=PlayerState.mp3InfoList.size()-2){
+                if (PlayerSource.music_position<= PlayerSource.mp3InfoList.size()-2){
 
-                    PlayerState.music_position++;
-                    PlayerState.isFirstTime = false;
-                    PlayerState.isPlaying = true;
-                    PlayerState.isPause = false;
+                    PlayerSource.music_position++;
+                    PlayerSource.isFirstTime = false;
+                    PlayerSource.isPlaying = true;
+                    PlayerSource.isPause = false;
 
                     Intent intent = new Intent();
                     intent.setAction("com.mindjet.media.MUSIC_SERVICE");
-                    intent.putExtra("url",PlayerState.mp3InfoList.get(PlayerState.music_position).url);
+                    intent.putExtra("url", PlayerSource.mp3InfoList.get(PlayerSource.music_position).url);
                     intent.putExtra("MSG",AppConstant.PlayerMsg.NEXT_MSG);
                     intent.setPackage("com.mindjet.com.musicplayer");
                     startService(intent);
@@ -212,16 +203,16 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.lrc_previous:
-                if (PlayerState.music_position>0){
+                if (PlayerSource.music_position>0){
 
-                    PlayerState.music_position--;
-                    PlayerState.isFirstTime=false;
-                    PlayerState.isPlaying = true;
-                    PlayerState.isPause = false;
+                    PlayerSource.music_position--;
+                    PlayerSource.isFirstTime=false;
+                    PlayerSource.isPlaying = true;
+                    PlayerSource.isPause = false;
 
                     Intent intent = new Intent();
                     intent.setAction("com.mindjet.media.MUSIC_SERVICE");
-                    intent.putExtra("url",PlayerState.mp3InfoList.get(PlayerState.music_position).url);
+                    intent.putExtra("url", PlayerSource.mp3InfoList.get(PlayerSource.music_position).url);
                     intent.putExtra("MSG",AppConstant.PlayerMsg.PREVIOUS_MSG);
                     intent.setPackage("com.mindjet.com.musicplayer");
                     startService(intent);
@@ -235,12 +226,12 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
 
             case R.id.lrc_repeat_music:
                 //TODO 后期将该方法与 playeractivity的相同方法包装
-                if (PlayerState.mode!=1){
-                    PlayerState.mode=1;
+                if (PlayerSource.mode!=1){
+                    PlayerSource.mode=1;
                     repeat.setText("顺序");
                     Toast.makeText(LyricActivity.this, "当前播放模式：单曲循环", Toast.LENGTH_SHORT).show();
-                }else if (PlayerState.mode==1){
-                    PlayerState.mode=2;
+                }else if (PlayerSource.mode==1){
+                    PlayerSource.mode=2;
                     repeat.setText("单曲");
                     Toast.makeText(LyricActivity.this, "当前播放模式：顺序播放", Toast.LENGTH_SHORT).show();
                 }
@@ -248,12 +239,12 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
 
             case R.id.lrc_shuffle_music:
                 //TODO 后期将该方法与 playeractivity的相同方法包装
-                if (PlayerState.mode!=3){
-                    PlayerState.mode=3;
+                if (PlayerSource.mode!=3){
+                    PlayerSource.mode=3;
                     shuffle.setText("顺序");
                     Toast.makeText(LyricActivity.this, "当前播放模式：随机播放", Toast.LENGTH_SHORT).show();
-                }else if (PlayerState.mode==3){
-                    PlayerState.mode=2;
+                }else if (PlayerSource.mode==3){
+                    PlayerSource.mode=2;
                     shuffle.setText("随机");
                     Toast.makeText(LyricActivity.this, "当前播放模式：顺序播放", Toast.LENGTH_SHORT).show();
                 }
@@ -276,7 +267,7 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
 
                 int current = intent.getIntExtra("current",-1);
                 current_progress.setText(MediaUtil.formatTime(current));
-                whole_progress.setText(MediaUtil.formatTime(PlayerState.mp3InfoList.get(PlayerState.music_position).duration));
+                whole_progress.setText(MediaUtil.formatTime(PlayerSource.mp3InfoList.get(PlayerSource.music_position).duration));
                 lrc_seekbar.setProgress((int) (100*current/intent.getLongExtra("whole",-1)));
 
             }

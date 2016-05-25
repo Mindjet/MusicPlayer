@@ -20,6 +20,7 @@ public class PlayerService extends Service {
     private static int current_progress; //记录当前播放到某首歌的哪个位置（毫秒）
     private String musicPath; //当前播放歌曲的路径
 
+    private LrcProcess lrcProcess = new LrcProcess();
     public List<LrcContent> lrcContentList = new ArrayList<LrcContent>(); //存放歌词列表对象
     public static int index = 0; //当前时间对应的歌词索引
 
@@ -39,7 +40,7 @@ public class PlayerService extends Service {
                     current_progress = mediaPlayer.getCurrentPosition();
                     Intent intent = new Intent();
                     intent.putExtra("current", current_progress);
-                    intent.putExtra("whole", PlayerState.mp3InfoList.get(PlayerState.music_position).duration);
+                    intent.putExtra("whole", PlayerSource.mp3InfoList.get(PlayerSource.music_position).duration);
                     intent.setAction(AppConstant.ActionMsg.MUSIC_CURRENT);
                     sendBroadcast(intent);
                     handler.sendEmptyMessageDelayed(1, 1000);
@@ -57,15 +58,14 @@ public class PlayerService extends Service {
     @Override
     public void onCreate() {
 
-
         //监听音乐播放器结束后该如何继续
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
 
-                if (!PlayerState.isPause) {
+                if (!PlayerSource.isPause) {
 
-                    switch (PlayerState.mode) {
+                    switch (PlayerSource.mode) {
 
                         case 1:
                             play(0);
@@ -73,28 +73,28 @@ public class PlayerService extends Service {
 
                         case 2:
 
-                            PlayerState.music_position++;
-                            if (PlayerState.music_position > PlayerState.mp3InfoList.size() - 1)
-                                PlayerState.music_position = 0;
+                            PlayerSource.music_position++;
+                            if (PlayerSource.music_position > PlayerSource.mp3InfoList.size() - 1)
+                                PlayerSource.music_position = 0;
 
-                            musicPath = PlayerState.mp3InfoList.get(PlayerState.music_position).url;
+                            musicPath = PlayerSource.mp3InfoList.get(PlayerSource.music_position).url;
                             current_progress = 0;
                             music_change_need2refresh = true;
-                            PlayerState.isPlaying = true;
-                            PlayerState.isPause = false;
+                            PlayerSource.isPlaying = true;
+                            PlayerSource.isPause = false;
                             play(0);
                             updateTitle();
                             break;
 
                         case 3:
 
-                            PlayerState.music_position = (int) Math.floor(Math.random() * PlayerState.mp3InfoList
+                            PlayerSource.music_position = (int) Math.floor(Math.random() * PlayerSource.mp3InfoList
                                     .size());
-                            musicPath = PlayerState.mp3InfoList.get(PlayerState.music_position).url;
+                            musicPath = PlayerSource.mp3InfoList.get(PlayerSource.music_position).url;
                             current_progress = 0;
                             music_change_need2refresh = true;
-                            PlayerState.isPlaying = true;
-                            PlayerState.isPause = false;
+                            PlayerSource.isPlaying = true;
+                            PlayerSource.isPause = false;
                             play(0);
                             updateTitle();
 
@@ -150,13 +150,13 @@ public class PlayerService extends Service {
 
                 if (mediaPlayer.isPlaying()) mediaPlayer.pause();
                 //在 mediaplayer 暂停时，利用 getDuration 得到的结果是错误的
-                long duration = PlayerState.mp3InfoList.get(PlayerState.music_position).duration;
+                long duration = PlayerSource.mp3InfoList.get(PlayerSource.music_position).duration;
                 current_progress = (int) (intent.getIntExtra("progress", 0) * duration / 100);
                 play(current_progress);
                 handler.sendEmptyMessage(1);
 
-                PlayerState.isPause = false;
-                PlayerState.isPlaying = true;
+                PlayerSource.isPause = false;
+                PlayerSource.isPlaying = true;
                 break;
 
         }
@@ -168,9 +168,9 @@ public class PlayerService extends Service {
 
     private void next() {
 
-        PlayerState.music_position--;
-        musicPath = PlayerState.mp3InfoList.get(PlayerState.music_position).url;
-        long duration = PlayerState.mp3InfoList.get(PlayerState.music_position).duration;
+        PlayerSource.music_position--;
+        musicPath = PlayerSource.mp3InfoList.get(PlayerSource.music_position).url;
+        long duration = PlayerSource.mp3InfoList.get(PlayerSource.music_position).duration;
         play((int) duration);
 
     }
@@ -237,8 +237,8 @@ public class PlayerService extends Service {
 
         Intent intent = new Intent();
         intent.setAction(AppConstant.ActionMsg.UPDATE_TITLE);
-        intent.putExtra("title", PlayerState.mp3InfoList.get(PlayerState.music_position).title);
-        intent.putExtra("artist", PlayerState.mp3InfoList.get(PlayerState.music_position).artist);
+        intent.putExtra("title", PlayerSource.mp3InfoList.get(PlayerSource.music_position).title);
+        intent.putExtra("artist", PlayerSource.mp3InfoList.get(PlayerSource.music_position).artist);
         sendBroadcast(intent);
 
     }
@@ -248,8 +248,7 @@ public class PlayerService extends Service {
 
         handler.removeCallbacks(mRunnable);
 
-        //新建歌词处理的类，并根据歌曲的url开始读歌词
-        LrcProcess lrcProcess = new LrcProcess();
+        //利用lrcprocess类，根据歌曲的url开始读歌词
         lrcProcess.readLRC(musicPath);
 
         //将歌词送到 List<LrcContent> 对象中

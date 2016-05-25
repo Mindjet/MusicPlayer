@@ -17,9 +17,8 @@ import java.util.List;
  */
 public class LrcProcess {
 
-    private File rightFile = null;
 
-    private List<LrcContent> lrcContentList = new ArrayList<LrcContent>();
+    private List<LrcContent> lrcContentList;
 
     /**
      * 从 .lrc 文件中读取并解析歌词
@@ -28,24 +27,32 @@ public class LrcProcess {
      * [00:02.32]雅俗共赏
      * [00:03.43]许嵩
      * [00:05.22]歌词制作  Mindjet
-     *
-     * @param lrcPath
      */
     public String readLRC(String lrcPath) {
 
         StringBuilder stringBuilder = new StringBuilder();
-        lrcPath = lrcPath.replace("Music", "Musiclrc");
-        lrcPath = lrcPath.replace(".mp3", ".lrc");
 
-        File root = Environment.getExternalStorageDirectory();
-        getFile(root);
+        //从歌词集合中找出匹配歌词
+        lrcPath = lrcPath.replace(".mp3", ".lrc");
+        String song_name = lrcPath.substring(lrcPath.lastIndexOf("/")+1);
+        File rightFile = null;
+
+        for (int i=0;i<PlayerSource.LrcFile.size();i++){
+
+            if (PlayerSource.LrcFile.get(i).getPath().contains(song_name)){
+                rightFile = PlayerSource.LrcFile.get(i);
+                break;
+            }
+
+        }
+
+        lrcContentList = new ArrayList<>();
 
         if (rightFile!=null) {
 
             try {
 
                 FileInputStream in = new FileInputStream(rightFile);
-                System.out.println(rightFile);
                 BufferedReader reader = new BufferedReader(new InputStreamReader(in, "utf-8"));
                 String str = "";
 
@@ -73,8 +80,6 @@ public class LrcProcess {
                 reader.close();
                 in.close();
 
-                System.out.println(lrcContentList);
-
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 stringBuilder.append("没有歌词文件");
@@ -88,22 +93,6 @@ public class LrcProcess {
         }
 
         return null;
-
-    }
-
-    private void getFile(File root) {
-
-        File []files = root.listFiles();
-        for (File file : files){
-
-            if (file.isDirectory()){
-                getFile(file);
-            }else if (file.getPath().contains(PlayerState.mp3InfoList.get(PlayerState.music_position).title)){
-                if (file.getPath().substring(file.getPath().lastIndexOf(".")+1).equals("lrc"))
-                    rightFile =  file;
-            }
-
-        }
 
     }
 
