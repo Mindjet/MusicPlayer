@@ -6,6 +6,8 @@
 >How about building a simple music player?
 > 
 
-When I finished studying Android primary knowledge, I tried to build some specific demos. One friend of mine who already gets a deep understanding of Android told me that building a simple music player was not a bad challenge to get hang of the knowledge I had acquired.
+I started this project since I finished the elemental classes of Android. I looked forward to doing some demos that would help enhance my understanding of Android.
 
-So i start it.
+This MusicPlayer is my first project.
+
+Service, BroadcastReceiver, ContentProvider, Intent, and of course, Activity will be used in this project, and these five are the most important point in Android development.
