@@ -1,17 +1,29 @@
 package com.mindjet.com.musicplayer;
 
+import android.animation.ObjectAnimator;
+import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.mindjet.com.musicplayer.Constant.AppConstant;
+import com.mindjet.com.musicplayer.Constant.PlayerSource;
+import com.mindjet.com.musicplayer.Utils.LrcView;
+import com.mindjet.com.musicplayer.Utils.MediaUtil;
 
 
 /**
@@ -24,12 +36,15 @@ import android.widget.Toast;
 
 public class LyricActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private TextView song_name, artist, current_progress, whole_progress;
-    private Button pre, next, play, search, queue, repeat, shuffle;
+    private TextView song_name, current_progress, whole_progress;
+    private Button pre, next, play, settting,show_volume_panel,move_back;
     private Intent intent;
     public static LrcView lrcView;
     private boolean isFirstTimeStart = true;
-    private SeekBar lrc_seekbar;
+    private SeekBar lrc_seekbar,volume_seekbar;
+    private RelativeLayout volume_panel;
+    private boolean isPanelShow = false;
+    private AudioManager audioManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,12 +53,66 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
 
         initUI();
 
+        //沉浸式titlebar
+        immersiveMode();
+
+        initVolumeControl();
+
         //注册广播接收器
+        initBroadcastReceiver();
+
+    }
+
+    private void initVolumeControl() {
+        audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+        int current = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        int max = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        volume_seekbar.setMax(max);
+        volume_seekbar.setProgress(current);
+        volume_seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            private int progress;
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                this.progress = progress;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,progress,0);
+            }
+        });
+    }
+
+    private void initBroadcastReceiver() {
         LrcActivityReceiver receiver = new LrcActivityReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(AppConstant.ActionMsg.MUSIC_CURRENT);
         filter.addAction(AppConstant.ActionMsg.UPDATE_TITLE);
+        filter.addAction("android.media.VOLUME_CHANGED_ACTION");
         registerReceiver(receiver,filter);
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private void immersiveMode() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+
+            Window window = getWindow();
+            window.setFlags(
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION
+            );
+
+        }
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
     }
 
@@ -51,7 +120,6 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
     private void initUI() {
 
         song_name = (TextView) findViewById(R.id.song_name);
-        artist = (TextView) findViewById(R.id.artist);
         current_progress = (TextView) findViewById(R.id.current_progress);
         whole_progress = (TextView) findViewById(R.id.whole_progress);
         lrcView = (LrcView) findViewById(R.id.lrcShowView);
@@ -89,24 +157,24 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
         pre = (Button) findViewById(R.id.lrc_previous);
         next = (Button) findViewById(R.id.lrc_next);
         play = (Button) findViewById(R.id.lrc_play);
-        search = (Button) findViewById(R.id.lrc_search);
-        queue = (Button) findViewById(R.id.lrc_queue);
-        repeat = (Button) findViewById(R.id.lrc_repeat_music);
-        shuffle = (Button) findViewById(R.id.lrc_shuffle_music);
+        show_volume_panel = (Button) findViewById(R.id.lrc_volume);
+        settting = (Button) findViewById(R.id.lrc_setting);
+        move_back = (Button) findViewById(R.id.move_back);
+        volume_seekbar = (SeekBar) findViewById(R.id.volume_control_bar);
+        volume_panel = (RelativeLayout) findViewById(R.id.volume_panel);
+        volume_panel.setVisibility(View.GONE);
 
         pre.setOnClickListener(this);
         next.setOnClickListener(this);
         play.setOnClickListener(this);
-        search.setOnClickListener(this);
-        queue.setOnClickListener(this);
-        repeat.setOnClickListener(this);
-        shuffle.setOnClickListener(this);
+        move_back.setOnClickListener(this);
+        show_volume_panel.setOnClickListener(this);
 
 
         intent = getIntent();
         song_name.setText(intent.getStringExtra("title"));
-        artist.setText(intent.getStringExtra("artist"));
         whole_progress.setText(intent.getStringExtra("duration"));
+
 
     }
 
@@ -224,38 +292,40 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
                 }
                 break;
 
-            case R.id.lrc_repeat_music:
-                //TODO 后期将该方法与 playeractivity的相同方法包装
-                if (PlayerSource.mode!=1){
-                    PlayerSource.mode=1;
-                    repeat.setText("顺序");
-                    Toast.makeText(LyricActivity.this, "当前播放模式：单曲循环", Toast.LENGTH_SHORT).show();
-                }else if (PlayerSource.mode==1){
-                    PlayerSource.mode=2;
-                    repeat.setText("单曲");
-                    Toast.makeText(LyricActivity.this, "当前播放模式：顺序播放", Toast.LENGTH_SHORT).show();
-                }
+            case R.id.move_back:
+                finish();
                 break;
 
-            case R.id.lrc_shuffle_music:
-                //TODO 后期将该方法与 playeractivity的相同方法包装
-                if (PlayerSource.mode!=3){
-                    PlayerSource.mode=3;
-                    shuffle.setText("顺序");
-                    Toast.makeText(LyricActivity.this, "当前播放模式：随机播放", Toast.LENGTH_SHORT).show();
-                }else if (PlayerSource.mode==3){
-                    PlayerSource.mode=2;
-                    shuffle.setText("随机");
-                    Toast.makeText(LyricActivity.this, "当前播放模式：顺序播放", Toast.LENGTH_SHORT).show();
-                }
-                break;
+            case R.id.lrc_volume:
+                show_hide_volome_panel();
+
+
+        }
+
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void show_hide_volome_panel() {
+
+        if (volume_panel.getVisibility()==View.GONE||!isPanelShow ){
+
+            isPanelShow = true;
+            ObjectAnimator.ofFloat(volume_panel,"translationY",-120f,0f).start();
+            volume_panel.setVisibility(View.VISIBLE);
+
+        }else {
+
+            isPanelShow = false;
+            ObjectAnimator.ofFloat(volume_panel,"translationY",0,-120f).start();
 
         }
 
     }
 
 
-    //广播接收器，接收来自 音乐服务的广播，来更新 曲目信息 和 播放进度
+    //广播接收器，
+    // 接收来自 音乐服务的广播，来更新 曲目信息 和 播放进度
+    // 接收来自 音量变化的广播，更新进度条
     class LrcActivityReceiver extends BroadcastReceiver{
 
         @Override
@@ -275,7 +345,12 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
             if (action.equals(AppConstant.ActionMsg.UPDATE_TITLE)){
 
                 song_name.setText(intent.getStringExtra("title"));
-                artist.setText(intent.getStringExtra("artist"));
+
+            }
+
+            if (action.equals("android.media.VOLUME_CHANGED_ACTION")){
+
+                volume_seekbar.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
 
             }
 

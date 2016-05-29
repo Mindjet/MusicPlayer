@@ -1,6 +1,7 @@
 package com.mindjet.com.musicplayer;
 
-import android.os.Environment;
+import com.mindjet.com.musicplayer.Constant.PlayerSource;
+import com.mindjet.com.musicplayer.ItemBean.LrcContent;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,7 +10,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -37,7 +37,7 @@ public class LrcProcess {
         String song_name = lrcPath.substring(lrcPath.lastIndexOf("/")+1);
         File rightFile = null;
 
-        for (int i=0;i<PlayerSource.LrcFile.size();i++){
+        for (int i = 0; i< PlayerSource.LrcFile.size(); i++){
 
             if (PlayerSource.LrcFile.get(i).getPath().contains(song_name)){
                 rightFile = PlayerSource.LrcFile.get(i);

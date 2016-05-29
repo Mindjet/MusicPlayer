@@ -11,7 +11,7 @@
             android:fillViewport="true"
             >
 
-            <com.mindjet.com.musicplayer.LrcView
+            <com.mindjet.com.musicplayer.Utils.LrcView
                 android:id="@+id/lrcShowView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -22,55 +22,82 @@
         </ScrollView>
 
     <RelativeLayout
-        android:id="@+id/header_layout"
+        android:id="@+id/volume_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="#fff"
-        android:layout_centerHorizontal="true">
+        android:background="#FF6231"
+        android:padding="10dp"
+        android:layout_below="@+id/header_layout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
-
-        <Button
-            android:id="@+id/lrc_repeat_music"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="repeat"/>
-
-        <Button
-            android:id="@+id/lrc_shuffle_music"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:text="shuffle"/>
-
-        <TextView
-            android:id="@+id/song_name"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
+        <ImageView
+            android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:singleLine="true"
-            android:text="Medium Text"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="#000"/>
+            android:layout_width="25dp"
+            android:src="@mipmap/dec_volume"
+            android:layout_height="25dp"/>
 
-        <TextView
-            android:id="@+id/artist"
-            android:layout_width="100dp"
+        <SeekBar
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/song_name"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:singleLine="true"
-            android:text="Small Text"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="#000"/>
+            android:id="@+id/volume_control_bar"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_centerInParent="true"
+            android:indeterminate="false"/>
+
+        <ImageView
+            android:layout_width="25dp"
+            android:src="@mipmap/inc_volume"
+            android:layout_height="25dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_alignParentTop="true"
+        android:background="#FF6231"
+        android:paddingLeft="15dp"
+        android:gravity="bottom"
+        android:paddingBottom="10dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+
+            <Button
+                android:id="@+id/move_back"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@mipmap/back"
+                />
+
+            <TextView
+                android:id="@+id/song_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:layout_marginLeft="10dp"
+                android:text="Medium Text"
+                android:fontFamily="sans-serif-condensed"
+                android:textSize="20sp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#fff"/>
+
+        </LinearLayout>
+
+
+
 
     </RelativeLayout>
 
@@ -101,13 +128,12 @@
 
             <SeekBar
                 android:id="@+id/lrc_seekBar"
-                android:layout_width="200dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:indeterminate="false"
-                android:max="100"
-                android:progress="20"/>
+                android:max="100"/>
 
             <TextView
                 android:id="@+id/whole_progress"
@@ -122,44 +148,74 @@
         <LinearLayout
             android:id="@+id/buttonGroup"
             android:layout_width="match_parent"
+            android:paddingBottom="10dp"
+            android:gravity="center"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/lrc_search"
+            <LinearLayout
+                android:gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.2"
-                android:text="sear"/>
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/lrc_volume"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@mipmap/volume_orange"/>
+            </LinearLayout>
 
+            <LinearLayout
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
             <Button
                 android:id="@+id/lrc_previous"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.2"
-                android:text="pre"/>
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@mipmap/previous_orange"/>
+            </LinearLayout>
 
+            <LinearLayout
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
             <Button
                 android:id="@+id/lrc_play"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.2"
-                android:text="play"/>
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@mipmap/play_continue_orange"/>
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
             <Button
                 android:id="@+id/lrc_next"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.2"
-                android:text="next"/>
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@mipmap/next_orange"/>
+            </LinearLayout>
 
-            <Button
-                android:id="@+id/lrc_queue"
+            <LinearLayout
+                android:gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.2"
-                android:text="queue"/>
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/lrc_setting"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@mipmap/setting_orange"/>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+
+
 
 </RelativeLayout>

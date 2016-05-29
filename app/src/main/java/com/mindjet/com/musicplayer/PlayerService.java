@@ -8,6 +8,10 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.animation.AnimationUtils;
 
+import com.mindjet.com.musicplayer.Constant.AppConstant;
+import com.mindjet.com.musicplayer.Constant.PlayerSource;
+import com.mindjet.com.musicplayer.ItemBean.LrcContent;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

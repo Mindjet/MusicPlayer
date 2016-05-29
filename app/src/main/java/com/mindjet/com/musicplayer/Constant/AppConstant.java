@@ -1,4 +1,4 @@
-package com.mindjet.com.musicplayer;
+package com.mindjet.com.musicplayer.Constant;
 
 
 /**

@@ -1,4 +1,4 @@
-package com.mindjet.com.musicplayer;
+package com.mindjet.com.musicplayer.Utils;
 
 /**
  * Created by Mindjet on 2016/5/20.
@@ -12,9 +12,10 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 
+import com.mindjet.com.musicplayer.ItemBean.LrcContent;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.ConsoleHandler;
 
 /**
  * 自定义绘画歌词，产生滚动效果
@@ -86,7 +87,7 @@ public class LrcView extends android.widget.TextView {
             return;
         }
 
-        currentPaint.setColor(Color.BLACK);
+        currentPaint.setColor(Color.parseColor("#FF6231"));
         notCurrentPaint.setColor(Color.GRAY);
 
         currentPaint.setTextSize(25);

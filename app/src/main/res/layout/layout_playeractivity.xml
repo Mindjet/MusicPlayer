@@ -22,59 +22,88 @@
             android:id="@+id/buttonGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#25252f"
-            android:orientation="horizontal"
-            android:padding="5dp">
+            android:background="#ff6231"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:baselineAligned="false">
 
-            <Button
-                android:id="@+id/previous"
+            <LinearLayout
+                android:layout_weight="1"
+                android:gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight=".2"
-                android:text="上"/>
+                android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/previous"
+                    android:background="@mipmap/previous"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"/>
+            </LinearLayout>
 
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
             <Button
                 android:id="@+id/repeat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight=".2"
-                android:text="重复"/>
+                android:background="@mipmap/repeat"
+                android:layout_width="30dp"
+                android:layout_height="30dp"/>
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
             <Button
+                android:background="@mipmap/play_continue"
                 android:id="@+id/play"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight=".2"
-                android:text="播放"/>
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:text=""/>
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
             <Button
                 android:id="@+id/shuffle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight=".2"
-                android:text="随机"/>
+                android:background="@mipmap/shuffle"
+                android:layout_width="30dp"
+                android:layout_height="30dp"/>
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
             <Button
                 android:id="@+id/next"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight=".2"
-                android:text="下"/>
+                android:background="@mipmap/next"
+                android:layout_width="28dp"
+                android:layout_height="28dp"/>
+            </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:baselineAligned="false">
 
             <ListView
                 android:id="@+id/listView"
-                android:layout_width="wrap_content"
+                android:background="#fff"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
                 android:layout_marginBottom="65dp"
-                android:divider="#fff"
+                android:divider="#dadada"
                 android:dividerHeight="1dp"
                 android:focusable="true"
                 android:layout_weight="1"/>
@@ -88,13 +117,13 @@
         android:layout_height="70dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:background="#333"
+        android:background="#ffffff"
         >
 
         <ImageView
             android:id="@+id/album"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginLeft="14dp"
             android:src="@mipmap/ic_launcher"
             android:layout_centerVertical="true"
@@ -110,10 +139,10 @@
             android:layout_toEndOf="@+id/album"
             android:layout_toRightOf="@+id/album"
             android:indeterminate="false"
-            android:max="100"
-            android:progress="20"/>
+            android:max="100"/>
 
         <TextView
+            android:fontFamily="sans-serif-condensed"
             android:id="@+id/song_name"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
@@ -123,11 +152,11 @@
             android:layout_marginLeft="15dp"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="Small Text"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="#fff"/>
+            android:textColor="#000"/>
 
         <TextView
+            android:fontFamily="sans-serif-condensed"
             android:id="@+id/current_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -137,7 +166,7 @@
             android:layout_marginRight="10dp"
             android:text="Small Text"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="#fff"/>
+            android:textColor="#000"/>
 
     </RelativeLayout>
 

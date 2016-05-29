@@ -1,4 +1,4 @@
-package com.mindjet.com.musicplayer;
+package com.mindjet.com.musicplayer.ItemBean;
 
 /**
  * Created by zyd on 2016/5/17.
@@ -14,5 +14,8 @@ public class Mp3Info {
     public long size;
     public String url;
     public int isMusic;
+    public String year;
+    public String album;
+    public long album_id;
 
 }

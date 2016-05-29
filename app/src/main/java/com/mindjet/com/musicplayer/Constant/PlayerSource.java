@@ -1,4 +1,6 @@
-package com.mindjet.com.musicplayer;
+package com.mindjet.com.musicplayer.Constant;
+
+import com.mindjet.com.musicplayer.ItemBean.Mp3Info;
 
 import java.io.File;
 import java.util.ArrayList;

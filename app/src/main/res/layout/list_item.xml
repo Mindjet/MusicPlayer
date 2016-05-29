@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:background="#25252f"
+                android:background="#f2f2f2"
                 android:layout_height="match_parent">
 
     <TextView
@@ -14,10 +14,10 @@
         android:layout_toRightOf="@+id/album"
         android:ellipsize="end"
         android:marqueeRepeatLimit="marquee_forever"
+        android:fontFamily="sans-serif-condensed"
         android:text="Large Text"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#fff"
-        android:textStyle="bold"/>
+        android:textColor="#212121"/>
 
     <TextView
         android:id="@+id/duration"
@@ -27,9 +27,10 @@
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/artist"
         android:layout_marginEnd="10dp"
+        android:fontFamily="sans-serif-condensed"
+        android:textColor="#494949"
         android:layout_marginRight="0dp"
-        android:text="Medium Text"
-        android:textColor="#fff"/>
+        android:text="Medium Text"/>
 
     <TextView
         android:id="@+id/artist"
@@ -39,17 +40,18 @@
         android:layout_alignLeft="@+id/title"
         android:layout_alignStart="@+id/title"
         android:text="Medium Text"
-        android:textColor="#fff"
-        android:textStyle="italic"/>
+        android:fontFamily="sans-serif-condensed"
+        android:textColor="#494949"/>
 
     <ImageView
         android:id="@+id/album"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:padding="5dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignTop="@+id/title"
         android:layout_marginBottom="10dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginLeft="15dp"
         android:src="@mipmap/ic_launcher"/>
 </RelativeLayout>
