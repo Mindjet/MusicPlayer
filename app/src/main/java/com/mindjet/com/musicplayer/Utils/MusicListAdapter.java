@@ -66,7 +66,7 @@ public class MusicListAdapter extends BaseAdapter{
         holder.title.setText(mp3InfoList.get(position).title);
         holder.artist.setText(mp3InfoList.get(position).artist);
         holder.duration.setText(MediaUtil.formatTime(mp3InfoList.get(position).duration));
-        holder.imageView.setImageResource(R.mipmap.play_continue_orange);
+        holder.imageView.setImageResource(R.mipmap.playing);
 
         return convertView;
     }

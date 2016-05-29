@@ -21,6 +21,7 @@ public class PlayerSource {
     public static boolean isPlaying = false;
     public static boolean isPause = true;
     public static boolean isFirstTime = true;
+    public static boolean isServiceOnline = false;
 
     //所有歌曲集合
     public static List<Mp3Info> mp3InfoList;
@@ -37,9 +38,6 @@ public class PlayerSource {
      * 2----列表循环
      * 3----随机播放
      */
-
-
-    //TODO 将控制键的触发的方法放在这里
 
 
     public static void getLrcFile(File root){

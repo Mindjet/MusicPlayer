@@ -62,6 +62,8 @@ public class PlayerService extends Service {
     @Override
     public void onCreate() {
 
+        PlayerSource.isServiceOnline = true;
+
         //监听音乐播放器结束后该如何继续
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override

@@ -491,12 +491,14 @@ public class PlayerActivity extends AppCompatActivity {
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
 
-            Intent intent = new Intent();
-            intent.setAction("com.mindjet.media.MUSIC_SERVICE");
-            intent.putExtra("MSG", AppConstant.PlayerMsg.PROGRESS_CHANGE);
-            intent.putExtra("progress", this.progress);
-            intent.setPackage("com.mindjet.com.musicplayer");
-            startService(intent);
+            if (PlayerSource.isServiceOnline) {
+                Intent intent = new Intent();
+                intent.setAction("com.mindjet.media.MUSIC_SERVICE");
+                intent.putExtra("MSG", AppConstant.PlayerMsg.PROGRESS_CHANGE);
+                intent.putExtra("progress", this.progress);
+                intent.setPackage("com.mindjet.com.musicplayer");
+                startService(intent);
+            }
 
         }
     }
@@ -521,6 +523,8 @@ public class PlayerActivity extends AppCompatActivity {
 
                 String name = intent.getStringExtra("title");
                 song_name.setText(name);
+                update_album();
+
             }
 
         }

@@ -37,14 +37,16 @@ import com.mindjet.com.musicplayer.Utils.MediaUtil;
 public class LyricActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView song_name, current_progress, whole_progress;
-    private Button pre, next, play, settting,show_volume_panel,move_back;
-    private Intent intent;
+    private Button pre, next, play, settting, show_volume_panel, move_back;
     public static LrcView lrcView;
-    private boolean isFirstTimeStart = true;
-    private SeekBar lrc_seekbar,volume_seekbar;
+    private SeekBar lrc_seekbar, volume_seekbar;
     private RelativeLayout volume_panel;
+
     private boolean isPanelShow = false;
+    private boolean isFirstTimeStart = true;
+
     private AudioManager audioManager;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,6 +62,26 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
 
         //注册广播接收器
         initBroadcastReceiver();
+
+    }
+
+    //做一些初始化操作
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        //第一次启动 LyricActivity 时，需要将此时传进来的 index 送给 LrcView
+        //以后就不必了，因为在 PlayerService 判断 lrcView 存在，直接在那边传给 lrcView
+        if (isFirstTimeStart) {
+            isFirstTimeStart = false;
+            Intent intent = getIntent();
+            int index = intent.getIntExtra("index", 0);
+            lrcView.setIndex(index);
+            lrcView.invalidate();
+        }
+
+        //判断此时播放状态，确定 播放键 的状态 -- “播放”？“暂停”？“继续”？
+        update_icon_state();
 
     }
 
@@ -85,7 +107,7 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,progress,0);
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
             }
         });
     }
@@ -96,7 +118,7 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
         filter.addAction(AppConstant.ActionMsg.MUSIC_CURRENT);
         filter.addAction(AppConstant.ActionMsg.UPDATE_TITLE);
         filter.addAction("android.media.VOLUME_CHANGED_ACTION");
-        registerReceiver(receiver,filter);
+        registerReceiver(receiver, filter);
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -145,12 +167,15 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                Intent intent = new Intent();
-                intent.setAction("com.mindjet.media.MUSIC_SERVICE");
-                intent.putExtra("progress", this.progress);
-                intent.putExtra("MSG", AppConstant.PlayerMsg.PROGRESS_CHANGE);
-                intent.setPackage("com.mindjet.com.musicplayer");
-                startService(intent);
+
+                if (PlayerSource.isServiceOnline) {
+                    Intent intent = new Intent();
+                    intent.setAction("com.mindjet.media.MUSIC_SERVICE");
+                    intent.putExtra("progress", this.progress);
+                    intent.putExtra("MSG", AppConstant.PlayerMsg.PROGRESS_CHANGE);
+                    intent.setPackage("com.mindjet.com.musicplayer");
+                    startService(intent);
+                }
             }
         });
 
@@ -169,35 +194,13 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
         play.setOnClickListener(this);
         move_back.setOnClickListener(this);
         show_volume_panel.setOnClickListener(this);
+        settting.setOnClickListener(this);
 
 
-        intent = getIntent();
+        Intent intent = getIntent();
         song_name.setText(intent.getStringExtra("title"));
         whole_progress.setText(intent.getStringExtra("duration"));
 
-
-    }
-
-    //做一些初始化操作
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        //第一次启动 LyricActivity 时，需要将此时传进来的 index 送给 LrcView
-        //以后就不必了，因为在 PlayerService 判断 lrcView 存在，直接在那边传给 lrcView
-        if (isFirstTimeStart) {
-            isFirstTimeStart = false;
-            intent = getIntent();
-            int index = intent.getIntExtra("index", 0);
-            lrcView.setIndex(index);
-            lrcView.invalidate();
-        }
-
-        //判断此时播放状态，确定 播放键 的状态 -- “播放”？“暂停”？“继续”？
-        //TODO 后期将设计为图形按钮，通过 广播机制 来更新
-        if (PlayerSource.isFirstTime) play.setText("播放");
-        if (PlayerSource.isPlaying) play.setText("暂停");
-        if (PlayerSource.isPause) play.setText("继续");
 
     }
 
@@ -209,61 +212,28 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
         switch (v.getId()) {
 
             case R.id.lrc_play:
-
-                if (PlayerSource.isFirstTime) {
-
-                    PlayerSource.isFirstTime = false;
-                    PlayerSource.isPlaying = true;
-                    PlayerSource.isPause = false;
-                    play.setText("暂停");
-                    Intent intent = new Intent();
-                    intent.putExtra("url", PlayerSource.mp3InfoList.get(PlayerSource.music_position).url);
-                    intent.setAction("com.mindjet.media.MUSIC_SERVICE");
-                    intent.putExtra("MSG",AppConstant.PlayerMsg.PLAY_MSG);
-                    intent.setPackage("com.mindjet.com.musicplayer");
-                    startService(intent);
-
-                }else if (PlayerSource.isPlaying) {
-
-                    PlayerSource.isPlaying = false;
-                    PlayerSource.isPause = true;
-                    play.setText("继续");
-                    Intent intent = new Intent();
-                    intent.setAction("com.mindjet.media.MUSIC_SERVICE");
-                    intent.putExtra("MSG", AppConstant.PlayerMsg.PAUSE_MSG);
-                    intent.setPackage("com.mindjet.com.musicplayer");
-                    startService(intent);
-
-                } else if (PlayerSource.isPause) {
-
-                    PlayerSource.isPause = false;
-                    PlayerSource.isPlaying = true;
-                    play.setText("暂停");
-                    Intent intent = new Intent();
-                    intent.setAction("com.mindjet.media.MUSIC_SERVICE");
-                    intent.putExtra("MSG",AppConstant.PlayerMsg.CONTINUE_MSG);
-                    intent.setPackage("com.mindjet.com.musicplayer");
-                    startService(intent);
-
-                }
+                play_pause_continue();
+                play_scale_anim(play);
                 break;
 
             case R.id.lrc_next:
-                if (PlayerSource.music_position<= PlayerSource.mp3InfoList.size()-2){
+                if (PlayerSource.music_position <= PlayerSource.mp3InfoList.size() - 2) {
 
                     PlayerSource.music_position++;
                     PlayerSource.isFirstTime = false;
                     PlayerSource.isPlaying = true;
                     PlayerSource.isPause = false;
+                    update_icon_state();
 
                     Intent intent = new Intent();
                     intent.setAction("com.mindjet.media.MUSIC_SERVICE");
                     intent.putExtra("url", PlayerSource.mp3InfoList.get(PlayerSource.music_position).url);
-                    intent.putExtra("MSG",AppConstant.PlayerMsg.NEXT_MSG);
+                    intent.putExtra("MSG", AppConstant.PlayerMsg.NEXT_MSG);
                     intent.setPackage("com.mindjet.com.musicplayer");
                     startService(intent);
+                    play_scale_anim(next);
 
-                }else {
+                } else {
 
                     Toast.makeText(this, "没有下一首了", Toast.LENGTH_SHORT).show();
 
@@ -271,21 +241,23 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.lrc_previous:
-                if (PlayerSource.music_position>0){
+                if (PlayerSource.music_position > 0) {
 
                     PlayerSource.music_position--;
-                    PlayerSource.isFirstTime=false;
+                    PlayerSource.isFirstTime = false;
                     PlayerSource.isPlaying = true;
                     PlayerSource.isPause = false;
+                    update_icon_state();
+                    play_scale_anim(pre);
 
                     Intent intent = new Intent();
                     intent.setAction("com.mindjet.media.MUSIC_SERVICE");
                     intent.putExtra("url", PlayerSource.mp3InfoList.get(PlayerSource.music_position).url);
-                    intent.putExtra("MSG",AppConstant.PlayerMsg.PREVIOUS_MSG);
+                    intent.putExtra("MSG", AppConstant.PlayerMsg.PREVIOUS_MSG);
                     intent.setPackage("com.mindjet.com.musicplayer");
                     startService(intent);
 
-                }else {
+                } else {
 
                     Toast.makeText(this, "没有上一首了", Toast.LENGTH_SHORT).show();
 
@@ -293,32 +265,97 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.move_back:
+                play_scale_anim(move_back);
                 finish();
                 break;
 
             case R.id.lrc_volume:
+                play_scale_anim(show_volume_panel);
                 show_hide_volome_panel();
+                break;
 
+            case R.id.lrc_setting:
+                play_scale_anim(settting);
+                break;
 
         }
 
     }
 
+    private void play_pause_continue() {
+        Intent intent = new Intent();
+        intent.setAction("com.mindjet.media.MUSIC_SERVICE");
+        intent.setPackage("com.mindjet.com.musicplayer");
+        intent.putExtra("url", PlayerSource.mp3InfoList.get(PlayerSource.music_position).url);
+
+        if (PlayerSource.isFirstTime) {
+
+            PlayerSource.isFirstTime = false;
+            PlayerSource.isPlaying = true;
+            PlayerSource.isPause = false;
+            update_icon_state();
+
+            intent.putExtra("MSG", AppConstant.PlayerMsg.PLAY_MSG);
+
+        } else if (PlayerSource.isPlaying) {
+
+            PlayerSource.isPlaying = false;
+            PlayerSource.isPause = true;
+            update_icon_state();
+
+            intent.putExtra("MSG", AppConstant.PlayerMsg.PAUSE_MSG);
+
+
+        } else if (PlayerSource.isPause) {
+
+            PlayerSource.isPause = false;
+            PlayerSource.isPlaying = true;
+            update_icon_state();
+
+            intent.putExtra("MSG", AppConstant.PlayerMsg.CONTINUE_MSG);
+
+        }
+        startService(intent);
+    }
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void show_hide_volome_panel() {
 
-        if (volume_panel.getVisibility()==View.GONE||!isPanelShow ){
+        if (volume_panel.getVisibility() == View.GONE || !isPanelShow) {
 
             isPanelShow = true;
-            ObjectAnimator.ofFloat(volume_panel,"translationY",-120f,0f).start();
+            ObjectAnimator.ofFloat(volume_panel, "translationY", -120f, 0f).start();
             volume_panel.setVisibility(View.VISIBLE);
 
-        }else {
+        } else {
 
             isPanelShow = false;
-            ObjectAnimator.ofFloat(volume_panel,"translationY",0,-120f).start();
+            ObjectAnimator.ofFloat(volume_panel, "translationY", 0, -120f).start();
 
         }
+
+    }
+
+    //更改按键的状态
+    private void update_icon_state() {
+
+        //改变播放暂停按钮的状态
+        if (PlayerSource.isPause) {
+            play.setBackgroundResource(R.mipmap.play_continue_orange);
+        } else if (PlayerSource.isPlaying) {
+            play.setBackgroundResource(R.mipmap.pause_orange);
+        }
+
+    }
+
+    //缩放动画
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void play_scale_anim(Button btn) {
+
+        ObjectAnimator.ofFloat(btn, "scaleX", 1f, 0.9f).start();
+        ObjectAnimator.ofFloat(btn, "scaleY", 1f, 0.9f).start();
+        ObjectAnimator.ofFloat(btn, "scaleX", 0.9f, 1f).start();
+        ObjectAnimator.ofFloat(btn, "scaleY", 0.9f, 1f).start();
 
     }
 
@@ -326,29 +363,30 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
     //广播接收器，
     // 接收来自 音乐服务的广播，来更新 曲目信息 和 播放进度
     // 接收来自 音量变化的广播，更新进度条
-    class LrcActivityReceiver extends BroadcastReceiver{
+    class LrcActivityReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
 
             String action = intent.getAction();
 
-            if (action.equals(AppConstant.ActionMsg.MUSIC_CURRENT)){
+            if (action.equals(AppConstant.ActionMsg.MUSIC_CURRENT)) {
 
-                int current = intent.getIntExtra("current",-1);
+                int current = intent.getIntExtra("current", -1);
                 current_progress.setText(MediaUtil.formatTime(current));
-                whole_progress.setText(MediaUtil.formatTime(PlayerSource.mp3InfoList.get(PlayerSource.music_position).duration));
-                lrc_seekbar.setProgress((int) (100*current/intent.getLongExtra("whole",-1)));
+                whole_progress.setText(MediaUtil.formatTime(PlayerSource.mp3InfoList.get(PlayerSource.music_position)
+                        .duration));
+                lrc_seekbar.setProgress((int) (100 * current / intent.getLongExtra("whole", -1)));
 
             }
 
-            if (action.equals(AppConstant.ActionMsg.UPDATE_TITLE)){
+            if (action.equals(AppConstant.ActionMsg.UPDATE_TITLE)) {
 
                 song_name.setText(intent.getStringExtra("title"));
 
             }
 
-            if (action.equals("android.media.VOLUME_CHANGED_ACTION")){
+            if (action.equals("android.media.VOLUME_CHANGED_ACTION")) {
 
                 volume_seekbar.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
 

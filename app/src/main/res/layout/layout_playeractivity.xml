@@ -125,7 +125,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="14dp"
-            android:src="@mipmap/ic_launcher"
+            android:src="@mipmap/appicon2"
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
