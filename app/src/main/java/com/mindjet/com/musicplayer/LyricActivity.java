@@ -6,15 +6,25 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -22,8 +32,12 @@ import android.widget.Toast;
 
 import com.mindjet.com.musicplayer.Constant.AppConstant;
 import com.mindjet.com.musicplayer.Constant.PlayerSource;
+import com.mindjet.com.musicplayer.ItemBean.Mp3Info;
 import com.mindjet.com.musicplayer.Utils.LrcView;
 import com.mindjet.com.musicplayer.Utils.MediaUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -33,11 +47,12 @@ import com.mindjet.com.musicplayer.Utils.MediaUtil;
  * 控制 上一首/下一首/播放/暂停/继续/播放模式/进度调整
  */
 
-
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class LyricActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView song_name, current_progress, whole_progress;
     private Button pre, next, play, settting, show_volume_panel, move_back;
+    private ImageView lrc_album;
     public static LrcView lrcView;
     private SeekBar lrc_seekbar, volume_seekbar;
     private RelativeLayout volume_panel;
@@ -47,6 +62,9 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
 
     private AudioManager audioManager;
 
+    private int height;
+    private int width;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,6 +72,7 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.lrc_layout);
 
         initUI();
+        updateAlbum();
 
         //沉浸式titlebar
         immersiveMode();
@@ -62,6 +81,14 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
 
         //注册广播接收器
         initBroadcastReceiver();
+
+    }
+
+    private void updateAlbum() {
+
+        Mp3Info mp3Info = PlayerSource.mp3InfoList.get(PlayerSource.music_position);
+        Bitmap bitmap = MediaUtil.getAlbum(getApplicationContext(),mp3Info.id,mp3Info.album_id,true);
+        lrc_album.setImageBitmap(bitmap);
 
     }
 
@@ -145,6 +172,7 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
         current_progress = (TextView) findViewById(R.id.current_progress);
         whole_progress = (TextView) findViewById(R.id.whole_progress);
         lrcView = (LrcView) findViewById(R.id.lrcShowView);
+        lrc_album = (ImageView) findViewById(R.id.lrc_album);
 
         lrc_seekbar = (SeekBar) findViewById(R.id.lrc_seekBar);
         lrc_seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -318,7 +346,6 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
         startService(intent);
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void show_hide_volome_panel() {
 
         if (volume_panel.getVisibility() == View.GONE || !isPanelShow) {
@@ -349,7 +376,6 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
     }
 
     //缩放动画
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void play_scale_anim(Button btn) {
 
         ObjectAnimator.ofFloat(btn, "scaleX", 1f, 0.9f).start();
@@ -383,6 +409,7 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
             if (action.equals(AppConstant.ActionMsg.UPDATE_TITLE)) {
 
                 song_name.setText(intent.getStringExtra("title"));
+                updateAlbum();
 
             }
 
