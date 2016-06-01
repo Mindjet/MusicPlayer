@@ -29,7 +29,7 @@ import android.widget.Toast;
 
 import com.mindjet.com.musicplayer.Constant.AppConstant;
 import com.mindjet.com.musicplayer.Constant.PlayerSource;
-import com.mindjet.com.musicplayer.Utils.CustomDialog;
+import com.mindjet.com.musicplayer.CustomView.CustomDialog;
 import com.mindjet.com.musicplayer.Utils.MediaUtil;
 import com.mindjet.com.musicplayer.ItemBean.Mp3Info;
 import com.mindjet.com.musicplayer.Utils.MusicListAdapter;

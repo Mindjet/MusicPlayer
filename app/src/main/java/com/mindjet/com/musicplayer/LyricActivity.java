@@ -11,19 +11,11 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -33,11 +25,8 @@ import android.widget.Toast;
 import com.mindjet.com.musicplayer.Constant.AppConstant;
 import com.mindjet.com.musicplayer.Constant.PlayerSource;
 import com.mindjet.com.musicplayer.ItemBean.Mp3Info;
-import com.mindjet.com.musicplayer.Utils.LrcView;
+import com.mindjet.com.musicplayer.CustomView.LrcView;
 import com.mindjet.com.musicplayer.Utils.MediaUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -351,13 +340,13 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
         if (volume_panel.getVisibility() == View.GONE || !isPanelShow) {
 
             isPanelShow = true;
-            ObjectAnimator.ofFloat(volume_panel, "translationY", -120f, 0f).start();
+            ObjectAnimator.ofFloat(volume_panel, "translationY", -300f, 0f).start();
             volume_panel.setVisibility(View.VISIBLE);
 
         } else {
 
             isPanelShow = false;
-            ObjectAnimator.ofFloat(volume_panel, "translationY", 0, -120f).start();
+            ObjectAnimator.ofFloat(volume_panel, "translationY", 0, -300f).start();
 
         }
 
@@ -368,9 +357,9 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
 
         //改变播放暂停按钮的状态
         if (PlayerSource.isPause) {
-            play.setBackgroundResource(R.mipmap.play_continue_orange);
+            play.setBackgroundResource(R.mipmap.play_continue);
         } else if (PlayerSource.isPlaying) {
-            play.setBackgroundResource(R.mipmap.pause_orange);
+            play.setBackgroundResource(R.mipmap.pause);
         }
 
     }

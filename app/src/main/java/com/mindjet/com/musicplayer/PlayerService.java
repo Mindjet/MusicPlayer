@@ -11,6 +11,7 @@ import android.view.animation.AnimationUtils;
 import com.mindjet.com.musicplayer.Constant.AppConstant;
 import com.mindjet.com.musicplayer.Constant.PlayerSource;
 import com.mindjet.com.musicplayer.ItemBean.LrcContent;
+import com.mindjet.com.musicplayer.Utils.LrcProcess;
 
 import java.io.IOException;
 import java.util.ArrayList;

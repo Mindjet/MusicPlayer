@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="250dp"
+              android:background="#ff6231"
+              android:layout_height="65dp">
+
+    <ImageView
+        android:layout_width="65dp"
+        android:src="@mipmap/ic_launcher"
+        android:layout_height="65dp"/>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="name of song"
+            android:textColor="#fff"
+            android:textSize="16sp"
+            android:layout_marginBottom="5dp"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_weight="1">
+                <Button
+                    android:layout_width="30dp"
+                    android:id="@+id/widget_previous"
+                    android:background="@mipmap/previous"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_weight="1">
+                <Button
+                    android:id="@+id/widget_play_continue"
+                    android:layout_width="30dp"
+                    android:background="@mipmap/play_continue"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_weight="1">
+                <Button
+                    android:id="@+id/widget_next"
+                    android:layout_width="30dp"
+                    android:background="@mipmap/next"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

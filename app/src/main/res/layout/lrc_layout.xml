@@ -32,14 +32,14 @@
                     android:layout_height="match_parent"/>
 
 
-                <com.mindjet.com.musicplayer.Utils.LrcView
+                <com.mindjet.com.musicplayer.CustomView.LrcView
                     android:id="@+id/lrcShowView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:textColor="#fff"
-                    android:text=""
+                    android:textSize="20sp"
                     android:textAppearance="?android:attr/textAppearanceLarge"/>
 
 
@@ -51,7 +51,6 @@
         android:id="@+id/volume_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FF6231"
         android:padding="10dp"
         android:layout_below="@+id/header_layout"
         android:layout_alignParentLeft="true"
@@ -88,7 +87,6 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_alignParentTop="true"
-        android:background="#FF6231"
         android:paddingLeft="15dp"
         android:gravity="bottom"
         android:paddingBottom="10dp">
@@ -134,7 +132,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#fff"
         android:layout_centerHorizontal="true"
         android:orientation="vertical">
 
@@ -148,6 +145,7 @@
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:textColor="#fff"
                 android:gravity="center"
                 android:text=""
                 android:textAppearance="?android:attr/textAppearanceSmall"/>
@@ -167,6 +165,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
+                android:textColor="#fff"
                 android:text="Small Text"
                 android:textAppearance="?android:attr/textAppearanceSmall"/>
         </LinearLayout>
@@ -188,7 +187,7 @@
                 android:id="@+id/lrc_volume"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:background="@mipmap/volume_orange"/>
+                android:background="@mipmap/inc_volume"/>
             </LinearLayout>
 
             <LinearLayout
@@ -200,7 +199,7 @@
                 android:id="@+id/lrc_previous"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:background="@mipmap/previous_orange"/>
+                android:background="@mipmap/previous"/>
             </LinearLayout>
 
             <LinearLayout
@@ -212,7 +211,7 @@
                 android:id="@+id/lrc_play"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="@mipmap/play_continue_orange"/>
+                android:background="@mipmap/play_continue"/>
 
             </LinearLayout>
 
@@ -225,7 +224,7 @@
                 android:id="@+id/lrc_next"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:background="@mipmap/next_orange"/>
+                android:background="@mipmap/next"/>
             </LinearLayout>
 
             <LinearLayout
