@@ -15,11 +15,13 @@ Service, BroadcastReceiver, ContentProvider, Intent, and of course, Activity wil
 ##Screenshots
 
 * Welcome
-<img src="screenshots/Welcome.png" width="100">
-![Welcome](screenshots/Welcome.png)
+</br>
+<img src="screenshots/Welcome.png" width="200">
 
 * Home
-![Home](screenshots/Home.png)
+</br>
+<img src="screenshots/Home.png" width="200">
 
 * Lyric
-![Lyric](screenshots/Lyric.png)
+</br>
+<img src="screenshots/Lyric.png" width="200">
