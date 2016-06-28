@@ -15,7 +15,7 @@ Service, BroadcastReceiver, ContentProvider, Intent, and of course, Activity wil
 ##Screenshots
 
 * Welcome
-![Welcome](screenshots/Welcome.png)
+![Welcome](screenshots/Welcome.png =100*100)
 
 * Home
 ![Home](screenshots/Home.png)
