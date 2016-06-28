@@ -11,3 +11,14 @@ I started this project since I finished the elemental classes of Android. I look
 This MusicPlayer is my first project.
 
 Service, BroadcastReceiver, ContentProvider, Intent, and of course, Activity will be used in this project, and these five are the most important point in Android development.
+
+##Screenshots
+
+* Welcome
+![Welcome](screenshots/Welcome.png)
+
+* Home
+![Home](screenshots/Home.png)
+
+* Lyric
+![Lyric](screenshots/Lyric.png)
