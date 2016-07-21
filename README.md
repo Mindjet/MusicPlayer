@@ -16,12 +16,12 @@ Service, BroadcastReceiver, ContentProvider, Intent, and of course, Activity wil
 
 * Welcome
 </br>
-<img src="screenshots/Welcome.png" width="250">
+<img src="screenshots/Welcome.png" width="280">
 
 * Home
 </br>
-<img src="screenshots/Home.png" width="250">
+<img src="screenshots/Home.png" width="280">
 
 * Lyric
 </br>
-<img src="screenshots/Lyric.png" width="250">
+<img src="screenshots/Lyric.png" width="280">
